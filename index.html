@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IN Carros - Venda de Veículos</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        :root {
+            --bg-dark-primary: #121212;
+            --bg-dark-secondary: #1E1E1E;
+            --bg-card: #2A2A2A;
+            --text-primary: #E0E0E0;
+            --text-secondary: #A0A0A0;
+            --border-color: #383838;
+            --accent-primary: #FFFFFF;
+            --accent-special: #D4AF37;
+            --accent-whatsapp: #25D366;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark-primary); color: var(--text-primary); font-size: 14px; }
+        .site-container { width: 95%; max-width: 1800px; margin: 0 auto; padding: 1rem; }
+        .hidden { display: none !important; }
+        .top-header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 0; border-bottom: 1px solid var(--border-color); }
+        .logo { display: flex; align-items: center; font-size: 1.8rem; font-weight: 700; gap: 1.5rem; }
+        .main-nav { display: flex; align-items: center; gap: 2rem; }
+        .main-nav a { color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; transition: color 0.3s; }
+        .main-nav a:hover { color: var(--accent-primary); }
+        .main-body { display: flex; gap: 2rem; padding-top: 2rem; }
+        .filters-sidebar { width: 250px; flex-shrink: 0; }
+        .filter-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .filter-title h2 { font-size: 1.5rem; font-weight: 500; }
+        .filter-title a { font-size: 0.75rem; color: var(--text-secondary); text-decoration: none; text-transform: uppercase; cursor: pointer; }
+        .filter-group { padding: 1.5rem 0; border-top: 1px solid var(--border-color); }
+        .filter-group h3 { font-size: 1rem; font-weight: 500; margin-bottom: 1.2rem; }
+        .filter-group label { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; cursor: pointer; color: var(--text-secondary); }
+        .filter-group input:checked + span { color: var(--accent-primary); }
+        .filter-group select { width: 100%; background-color: var(--bg-dark-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.8rem; border-radius: 4px; }
+        .main-content { flex: 1; }
+        .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .content-header h1 { font-size: 1.8rem; font-weight: 500; }
+        .vehicle-count { font-size: 0.8rem; font-weight: 400; color: var(--text-secondary); margin-left: 1rem; background-color: var(--border-color); padding: 0.2rem 0.5rem; border-radius: 4px; }
+        .sort-by { display: flex; align-items: center; gap: 0.5rem; }
+        .sort-by label { font-size: 0.8rem; color: var(--text-secondary); }
+        .sort-by select { background: transparent; border: none; color: var(--accent-primary); font-weight: 700; font-size: 1rem; }
+        .sort-by select option { background: var(--bg-dark-secondary); }
+        .vehicle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+        .vehicle-card { background-color: var(--bg-card); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--border-color); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; }
+        .vehicle-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); border-color: var(--accent-special); }
+        .card-header { padding: 1.5rem; }
+        .card-header h2 { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem; }
+        .card-header .year-km { font-size: 0.9rem; color: var(--text-secondary); }
+        .vehicle-card img { width: 100%; height: 180px; object-fit: contain; padding: 0.5rem; }
+        .card-footer { padding: 1.5rem; margin-top: auto; border-top: 1px solid var(--border-color); text-align: right; }
+        .price-info .price-label { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.25rem; }
+        .price-info .price-value { font-size: 1.8rem; font-weight: 700; color: var(--accent-primary); }
+        .details-view { padding: 1rem; background-color: var(--bg-dark-secondary); border-radius: 8px; }
+        .details-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem; margin-bottom: 2rem; }
+        .details-header h1 { font-size: 2.5rem; font-weight: 700; }
+        .back-button { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color); padding: 0.8rem 1.5rem; border-radius: 5px; cursor: pointer; font-size: 1rem; transition: background-color 0.3s; }
+        .back-button:hover { background-color: var(--border-color); }
+        .details-content { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
+        .gallery .main-image { width: 100%; height: 400px; object-fit: contain; background-color: var(--bg-card); border-radius: 8px; margin-bottom: 1rem; }
+        .details-info .price-value { font-size: 2.5rem; font-weight: 700; margin-bottom: 2rem; }
+        .specs-list { list-style: none; margin-bottom: 2rem; }
+        .specs-list li { display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid var(--border-color); }
+        .specs-list li span { color: var(--text-secondary); }
+        .financing-simulator { background-color: var(--bg-card); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); }
+        .financing-simulator h3 { font-size: 1.2rem; margin-bottom: 1.5rem; text-align: center; }
+        .simulator-control { margin-bottom: 1.5rem; }
+        .simulator-control label { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .simulator-control span { font-weight: 700; color: var(--accent-special); }
+        input[type="range"] { -webkit-appearance: none; width: 100%; height: 8px; background: var(--border-color); border-radius: 5px; outline: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; background: var(--accent-special); cursor: pointer; border-radius: 50%; }
+        input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: var(--accent-special); cursor: pointer; border-radius: 50%; }
+        .simulator-result { text-align: center; background: var(--bg-dark-primary); padding: 1rem; border-radius: 5px; }
+        .simulator-result p { color: var(--text-secondary); font-size: 0.9rem; }
+        .simulator-result .installment-value { font-size: 2rem; color: var(--accent-primary); font-weight: 700; }
+        .whatsapp-button { display: flex; align-items: center; justify-content: center; gap: 0.8rem; width: 100%; background-color: var(--accent-whatsapp); color: #FFF; border: none; padding: 1rem; margin-top: 1.5rem; border-radius: 5px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: opacity 0.3s; text-decoration: none; }
+        .whatsapp-button:hover { opacity: 0.9; }
+        .whatsapp-button i { font-size: 1.5rem; }
+
+        /* --- OTIMIZAÇÃO PARA CELULAR --- */
+        @media (max-width: 768px) {
+            .main-body { flex-direction: column; }
+            .filters-sidebar { width: 100%; margin-bottom: 2rem; }
+            .main-nav .nav-text { display: none; }
+            .main-nav { gap: 1.5rem; }
+            .logo { font-size: 1.5rem; }
+            .content-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+            .content-header h1 { font-size: 1.5rem; }
+            .details-content { grid-template-columns: 1fr; }
+            .details-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+            .details-header h1 { font-size: 1.8rem; }
+            .back-button { width: 100%; text-align: center; }
+            .gallery .main-image { height: 250px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="site-container">
+        <header class="top-header">
+            <div class="logo"> <i class="fa-solid fa-car"></i> <span>IN Carros</span> </div>
+            <nav class="main-nav">
+                <a href="#" id="favorites-link"> <i class="fa-solid fa-star"></i> <span class="nav-text">Meus Favoritos</span> </a>
+                <a href="#"> <i class="fa-solid fa-circle-info"></i> <span class="nav-text">Ajuda</span> </a>
+            </nav>
+        </header>
+
+        <div id="main-view">
+            <main class="main-body">
+                <aside class="filters-sidebar">
+                    <form id="filter-form">
+                        <div class="filter-title"> <h2>Filtros</h2> <a id="clear-filters">LIMPAR TUDO</a> </div>
+                        <div class="filter-group"> <h3>Condição</h3> <label><input type="radio" name="condition" value="all" checked><span>Todos</span></label> <label><input type="radio" name="condition" value="Novo"><span>Novos</span></label> <label><input type="radio" name="condition" value="Seminovo"><span>Seminovos</span></label> </div>
+                        <div class="filter-group"> <h3>Preço</h3> <label><input type="radio" name="price" value="all" checked><span>Qualquer Valor</span></label> <label><input type="radio" name="price" value="0-80000"><span>Até R$80.000</span></label> <label><input type="radio" name="price" value="80001-120000"><span>R$80.001 - R$120.000</span></label> <label><input type="radio" name="price" value="120001-200000"><span>R$120.001 - R$200.000</span></label> <label><input type="radio" name="price" value="200001-9999999"><span>Acima de R$200.000</span></label> </div>
+                        <div class="filter-group"> <h3>Categoria</h3> <label><input type="checkbox" name="category" value="Picape"><span>Picape</span></label> <label><input type="checkbox" name="category" value="SUV"><span>SUV</span></label> <label><input type="checkbox" name="category" value="Sedan"><span>Sedan</span></label> <label><input type="checkbox" name="category" value="Hatch"><span>Hatch</span></label> <label><input type="checkbox" name="category" value="Executivo"><span>Executivo</span></label> <label><input type="checkbox" name="category" value="Elétrico"><span>Elétrico</span></label> </div>
+                        <div class="filter-group"> <h3>Ano</h3> <select name="year"><option value="all">Todos</option><option>2024</option><option>2023</option><option>2022</option><option>2021</option></select> </div>
+                        <div class="filter-group"> <h3>Câmbio</h3> <select name="transmission"><option value="all">Todos</option><option>Automático</option><option>Manual</option></select> </div>
+                    </form>
+                </aside>
+    
+                <section class="main-content">
+                    <div class="content-header"> <h1>Veículos à Venda <span id="vehicle-count" class="vehicle-count"></span></h1> <div class="sort-by"> <label for="sort">ORDENAR POR</label> <select id="sort" name="sort"> <option value="popular">MAIS RELEVANTES</option> <option value="price-asc">PREÇO: MENOR AO MAIOR</option> <option value="price-desc">PREÇO: MAIOR AO MENOR</option> </select> </div> </div>
+                    <div id="vehicle-grid" class="vehicle-grid"></div>
+                </section>
+            </main>
+        </div>
+
+        <section id="vehicle-details" class="details-view hidden"></section>
+    </div>
+
+    <script>
+    const vehicleData = [
+        { name: 'Hyundai HB20', category: 'Hatch', year: '2023', km: 15000, price: 85500, transmission: 'Automático', fuel: 'Flex', image: 'img/4178bfec040b1cd0ee9f0b5bb88ae6be-removebg-preview.png', condition: 'Seminovo' },
+        { name: 'Chevrolet Onix', category: 'Hatch', year: '2022', km: 25000, price: 79900, transmission: 'Manual', fuel: 'Flex', image: 'https://i.imgur.com/h6XypuR.png', condition: 'Seminovo' },
+        { name: 'Fiat Mobi', category: 'Hatch', year: '2023', km: 12000, price: 69900, transmission: 'Manual', fuel: 'Flex', image: 'https://i.imgur.com/QkHt81L.png', condition: 'Seminovo' },
+        { name: 'VW Polo', category: 'Hatch', year: '2024', km: 8000, price: 92000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/sAkgR2z.png', condition: 'Seminovo' },
+        { name: 'Jeep Renegade', category: 'SUV', year: '2022', km: 35000, price: 115800, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/bQk9aJc.png', condition: 'Seminovo' },
+        { name: 'Hyundai Creta', category: 'SUV', year: '2024', km: 10000, price: 135000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/pYqGz2b.png', condition: 'Seminovo' },
+        { name: 'VW T-Cross', category: 'SUV', year: '2023', km: 18000, price: 132000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/Y4M2fYH.png', condition: 'Seminovo' },
+        { name: 'Chevrolet Tracker', category: 'SUV', year: '2023', km: 22000, price: 128000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/mUeYf2z.png', condition: 'Seminovo' },
+        { name: 'Toyota Corolla', category: 'Sedan', year: '2023', km: 20000, price: 150000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/Xq5g0zW.png', condition: 'Seminovo' },
+        { name: 'Honda Civic', category: 'Sedan', year: '2024', km: 500, price: 165000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/J3iE0A8.png', condition: 'Novo' },
+        { name: 'Nissan Kicks', category: 'SUV', year: '2023', km: 28000, price: 112000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/L79Ewz5.png', condition: 'Seminovo' },
+        { name: 'Fiat Pulse', category: 'SUV', year: '2024', km: 9000, price: 105000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/4g4F3qH.png', condition: 'Seminovo' },
+        { name: 'Renault Kwid', category: 'Hatch', year: '2023', km: 14000, price: 65000, transmission: 'Manual', fuel: 'Flex', image: 'https://i.imgur.com/oI2v7a8.png', condition: 'Seminovo' },
+        { name: 'BYD Dolphin', category: 'Elétrico', year: '2024', km: 2000, price: 149800, transmission: 'Automático', fuel: 'Elétrico', image: 'https://i.imgur.com/w9r1f8a.png', condition: 'Novo' },
+        { name: 'Caoa Chery Tiggo 5x', category: 'SUV', year: '2022', km: 31000, price: 108000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/sJ7e8dR.png', condition: 'Seminovo' },
+        { name: 'Peugeot 208', category: 'Hatch', year: '2024', km: 700, price: 99900, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/M6L5d8O.png', condition: 'Novo' },
+        { name: 'Fiat Toro', category: 'Picape', year: '2023', km: 45000, price: 145000, transmission: 'Automático', fuel: 'Diesel', image: 'https://i.imgur.com/lZ2y5pT.png', condition: 'Seminovo' },
+        { name: 'Toyota Hilux', category: 'Picape', year: '2022', km: 60000, price: 210000, transmission: 'Automático', fuel: 'Diesel', image: 'https://i.imgur.com/c6F3b9g.png', condition: 'Seminovo' },
+        { name: 'Jeep Compass', category: 'SUV', year: '2024', km: 12000, price: 180000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/eO3k9fL.png', condition: 'Seminovo' },
+        { name: 'BMW 320i', category: 'Executivo', year: '2022', km: 25000, price: 280000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/uY6dG3k.png', condition: 'Seminovo' }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const grid = document.getElementById('vehicle-grid');
+        const mainView = document.getElementById('main-view');
+        const detailsView = document.getElementById('vehicle-details');
+        const filterForm = document.getElementById('filter-form');
+        const sortSelect = document.getElementById('sort');
+        const vehicleCountSpan = document.getElementById('vehicle-count');
+        const clearFiltersLink = document.getElementById('clear-filters');
+        const favoritesLink = document.getElementById('favorites-link');
+        
+        function formatCurrency(value) { return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
+
+        function createVehicleCard(vehicle) {
+            return `
+                <article class="vehicle-card" data-name="${vehicle.name}">
+                    <div class="card-header"> <h2>${vehicle.name}</h2> <p class="year-km">${vehicle.year} &bull; ${vehicle.km.toLocaleString('pt-BR')} km</p> </div>
+                    <img src="${vehicle.image}" alt="Carro ${vehicle.name}" onerror="this.onerror=null;this.src='https://placehold.co/400x200/2A2A2A/E0E0E0?text=${vehicle.name.replace(' ', '+')}';">
+                    <div class="card-footer"> <div class="price-info"> <p class="price-label">Preço à vista</p> <p class="price-value">${formatCurrency(vehicle.price)}</p> </div> </div>
+                </article>`;
+        }
+        
+        function renderVehicles() {
+            const formData = new FormData(filterForm);
+            const condition = formData.get('condition');
+            const priceRange = formData.get('price').split('-');
+            const categories = formData.getAll('category');
+            const year = formData.get('year');
+            const transmission = formData.get('transmission');
+            const sortOrder = sortSelect.value;
+            
+            let filteredVehicles = vehicleData.filter(v => {
+                const [minPrice, maxPrice] = priceRange;
+                const priceMatch = priceRange[0] === 'all' || (v.price >= Number(minPrice) && v.price <= Number(maxPrice));
+                const categoryMatch = categories.length === 0 || categories.includes(v.category);
+                const yearMatch = year === 'all' || v.year === year;
+                const transmissionMatch = transmission === 'all' || v.transmission === transmission;
+                const conditionMatch = condition === 'all' || v.condition === condition;
+                return priceMatch && categoryMatch && yearMatch && transmissionMatch && conditionMatch;
+            });
+
+            if (sortOrder === 'price-asc') filteredVehicles.sort((a, b) => a.price - b.price);
+            else if (sortOrder === 'price-desc') filteredVehicles.sort((a, b) => b.price - a.price);
+
+            grid.innerHTML = filteredVehicles.map(createVehicleCard).join('') || '<p>Nenhum veículo encontrado com os filtros selecionados.</p>';
+            vehicleCountSpan.textContent = `${filteredVehicles.length} OFERTAS`;
+            addCardClickListeners();
+        }
+
+        function addCardClickListeners() {
+            document.querySelectorAll('.vehicle-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const vehicleName = card.dataset.name;
+                    const vehicle = vehicleData.find(v => v.name === vehicleName);
+                    
+                    const phoneNumber = "5511999999999"; // <-- INSIRA SEU NÚMERO DE WHATSAPP AQUI
+                    const message = encodeURIComponent(`Olá! Tenho interesse no ${vehicle.name} (${vehicle.year}) e gostaria de mais informações.`);
+                    const whatsappLink = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
+
+                    detailsView.innerHTML = `
+                        <div class="details-header">
+                            <h1>${vehicle.name}</h1>
+                            <button class="back-button"><i class="fa-solid fa-arrow-left"></i> Voltar</button>
+                        </div>
+                        <div class="details-content">
+                            <div class="gallery"> <img src="${vehicle.image}" alt="Imagem de ${vehicle.name}" class="main-image"> </div>
+                            <div class="details-info">
+                                <p class="price-value">${formatCurrency(vehicle.price)}</p>
+                                <ul class="specs-list">
+                                    <li><span>Ano/Modelo</span> <strong>${vehicle.year}</strong></li>
+                                    <li><span>Quilometragem</span> <strong>${vehicle.km.toLocaleString('pt-BR')} km</strong></li>
+                                    <li><span>Condição</span> <strong>${vehicle.condition}</strong></li>
+                                </ul>
+                                <div class="financing-simulator">
+                                    <h3>Simule seu Financiamento</h3>
+                                    <div class="simulator-control"> <label>Entrada: <span id="downpayment-value"></span></label> <input type="range" id="downpayment-slider" min="${vehicle.price * 0.1}" max="${vehicle.price * 0.9}" step="1000" value="${vehicle.price * 0.2}"> </div>
+                                    <div class="simulator-control"> <label>Parcelas: <span id="installments-value"></span></label> <input type="range" id="installments-slider" min="12" max="60" step="12" value="48"> </div>
+                                    <div class="simulator-result"> <p>Valor da Parcela (aprox.)</p> <p class="installment-value" id="installment-result"></p> </div>
+                                </div>
+                                <a href="${whatsappLink}" target="_blank" class="whatsapp-button"> <i class="fa-brands fa-whatsapp"></i> <span>Quero Adquirir</span> </a>
+                            </div>
+                        </div>`;
+                    
+                    mainView.classList.add('hidden');
+                    detailsView.classList.remove('hidden');
+                    window.scrollTo(0, 0);
+
+                    const downpaymentSlider = document.getElementById('downpayment-slider');
+                    const installmentsSlider = document.getElementById('installments-slider');
+                    const downpaymentValueEl = document.getElementById('downpayment-value');
+                    const installmentsValueEl = document.getElementById('installments-value');
+                    const installmentResultEl = document.getElementById('installment-result');
+                    
+                    function calculateFinancing() {
+                        const total_price = vehicle.price;
+                        const downpayment = parseFloat(downpaymentSlider.value);
+                        const installments = parseInt(installmentsSlider.value);
+                        const interest_rate = 0.0199; // Taxa de 1.99% a.m.
+
+                        downpaymentValueEl.textContent = formatCurrency(downpayment);
+                        installmentsValueEl.textContent = `${installments}x`;
+
+                        const financed_amount = total_price - downpayment;
+                        if (financed_amount <= 0) { installmentResultEl.innerHTML = formatCurrency(0); return; }
+
+                        const monthly_payment = financed_amount * (interest_rate * Math.pow(1 + interest_rate, installments)) / (Math.pow(1 + interest_rate, installments) - 1);
+                        installmentResultEl.innerHTML = `~ ${formatCurrency(monthly_payment)}`;
+                    }
+
+                    downpaymentSlider.addEventListener('input', calculateFinancing);
+                    installmentsSlider.addEventListener('input', calculateFinancing);
+                    document.querySelector('.back-button').addEventListener('click', () => { mainView.classList.remove('hidden'); detailsView.classList.add('hidden'); });
+                    calculateFinancing();
+                });
+            });
+        }
+        
+        filterForm.addEventListener('change', renderVehicles);
+        sortSelect.addEventListener('change', renderVehicles);
+        clearFiltersLink.addEventListener('click', (e) => { e.preventDefault(); filterForm.reset(); renderVehicles(); });
+        favoritesLink.addEventListener('click', (e) => { e.preventDefault(); alert('Funcionalidade de Favoritos em desenvolvimento!'); });
+        renderVehicles();
+    });
+    </script>
+</body>
+</html>
