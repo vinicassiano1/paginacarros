@@ -34,7 +34,7 @@
         .main-nav a { color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; transition: color 0.3s; }
         .main-nav a:hover { color: var(--accent-primary); }
         .main-body { display: flex; gap: 2rem; padding-top: 2rem; }
-        .filters-sidebar { width: 250px; flex-shrink: 0; }
+        .filters-sidebar { width: 250px; flex-shrink: 0; transition: all 0.3s ease-in-out; }
         .filter-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
         .filter-title h2 { font-size: 1.5rem; font-weight: 500; }
         .filter-title a { font-size: 0.75rem; color: var(--text-secondary); text-decoration: none; text-transform: uppercase; cursor: pointer; }
@@ -86,11 +86,11 @@
         .whatsapp-button { display: flex; align-items: center; justify-content: center; gap: 0.8rem; width: 100%; background-color: var(--accent-whatsapp); color: #FFF; border: none; padding: 1rem; margin-top: 1.5rem; border-radius: 5px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: opacity 0.3s; text-decoration: none; }
         .whatsapp-button:hover { opacity: 0.9; }
         .whatsapp-button i { font-size: 1.5rem; }
+        .filters-toggle-mobile { display: none; }
 
         /* --- OTIMIZAÇÃO PARA CELULAR --- */
         @media (max-width: 768px) {
             .main-body { flex-direction: column; }
-            .filters-sidebar { width: 100%; margin-bottom: 2rem; }
             .main-nav .nav-text { display: none; }
             .main-nav { gap: 1.5rem; }
             .logo { font-size: 1.5rem; }
@@ -101,6 +101,37 @@
             .details-header h1 { font-size: 1.8rem; }
             .back-button { width: 100%; text-align: center; }
             .gallery .main-image { height: 250px; }
+            
+            /* Botão e Lógica para Filtros Retráteis */
+            .filters-toggle-mobile {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 0.5rem;
+                width: 100%;
+                padding: 1rem;
+                background-color: var(--bg-card);
+                border: 1px solid var(--border-color);
+                color: var(--text-primary);
+                font-size: 1rem;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            .filters-sidebar {
+                width: 100%;
+                max-height: 0;
+                overflow: hidden;
+                padding: 0;
+                margin: 0;
+                border: none;
+                opacity: 0;
+            }
+            .filters-sidebar.visible {
+                max-height: 1200px; /* Valor alto para permitir expansão */
+                opacity: 1;
+                padding: 0;
+                margin-bottom: 2rem;
+            }
         }
     </style>
 </head>
@@ -117,7 +148,7 @@
 
         <div id="main-view">
             <main class="main-body">
-                <aside class="filters-sidebar">
+                <aside class="filters-sidebar" id="filters-sidebar">
                     <form id="filter-form">
                         <div class="filter-title"> <h2>Filtros</h2> <a id="clear-filters">LIMPAR TUDO</a> </div>
                         <div class="filter-group"> <h3>Condição</h3> <label><input type="radio" name="condition" value="all" checked><span>Todos</span></label> <label><input type="radio" name="condition" value="Novo"><span>Novos</span></label> <label><input type="radio" name="condition" value="Seminovo"><span>Seminovos</span></label> </div>
@@ -129,6 +160,10 @@
                 </aside>
     
                 <section class="main-content">
+                    <button class="filters-toggle-mobile" id="toggle-filters-btn">
+                        <i class="fa-solid fa-filter"></i>
+                        <span>Mostrar Filtros</span>
+                    </button>
                     <div class="content-header"> <h1>Veículos à Venda <span id="vehicle-count" class="vehicle-count"></span></h1> <div class="sort-by"> <label for="sort">ORDENAR POR</label> <select id="sort" name="sort"> <option value="popular">MAIS RELEVANTES</option> <option value="price-asc">PREÇO: MENOR AO MAIOR</option> <option value="price-desc">PREÇO: MAIOR AO MENOR</option> </select> </div> </div>
                     <div id="vehicle-grid" class="vehicle-grid"></div>
                 </section>
@@ -140,26 +175,26 @@
 
     <script>
     const vehicleData = [
-        { name: 'Hyundai HB20', category: 'Hatch', year: '2023', km: 15000, price: 85500, transmission: 'Automático', fuel: 'Flex', image: 'img/4178bfec040b1cd0ee9f0b5bb88ae6be-removebg-preview.png', condition: 'Seminovo' },
-        { name: 'Chevrolet Onix', category: 'Hatch', year: '2022', km: 25000, price: 79900, transmission: 'Manual', fuel: 'Flex', image: 'img/model_main_webp_comprar-lt-1-0-turbo-at-pacote-r7g_3676780d31.png-removebg-preview.png', condition: 'Seminovo' },
-        { name: 'Fiat Mobi', category: 'Hatch', year: '2023', km: 12000, price: 69900, transmission: 'Manual', fuel: 'Flex', image: 'img/download-removebg-preview.png', condition: 'Seminovo' },
-        { name: 'VW Polo', category: 'Hatch', year: '2024', km: 8000, price: 92000, transmission: 'Automático', fuel: 'Flex', image: 'img/43z4rqy9abur19o0e2gdqpdgt-removebg-preview.png', condition: 'Seminovo' },
-        { name: 'Jeep Renegade', category: 'SUV', year: '2022', km: 35000, price: 115800, transmission: 'Automático', fuel: 'Flex', image: 'img/Jeep-Renegade-Sport-11-removebg-preview.png', condition: 'Seminovo' },
-        { name: 'Hyundai Creta', category: 'SUV', year: '2024', km: 10000, price: 135000, transmission: 'Automático', fuel: 'Flex', image: 'img/hyundai-creta-platinum-safety-2024-removebg-preview.png', condition: 'Seminovo' },
-        { name: 'VW T-Cross', category: 'SUV', year: '2023', km: 18000, price: 132000, transmission: 'Automático', fuel: 'Flex', image: 'img/tcross-1hv5g73xttbnd-removebg-preview.png', condition: 'Seminovo' },
-        { name: 'Chevrolet Tracker', category: 'SUV', year: '2023', km: 22000, price: 128000, transmission: 'Automático', fuel: 'Flex', image: 'img/comprar-lt-1-0-turbo-pacote-rfd_00da5d50ca-removebg-preview.png', condition: 'Seminovo' },
-        { name: 'Toyota Corolla', category: 'Sedan', year: '2023', km: 20000, price: 150000, transmission: 'Automático', fuel: 'Flex', image: 'img/2023-toyota-corolla-jdm-removebg-preview.png', condition: 'Seminovo' },
-        { name: 'Honda Civic', category: 'Sedan', year: '2024', km: 500, price: 165000, transmission: 'Automático', fuel: 'Flex', image: 'img/fl_progressive_f_webp_q_80-removebg-preview.png', condition: 'Novo' },
-        { name: 'Nissan Kicks', category: 'SUV', year: '2023', km: 28000, price: 112000, transmission: 'Automático', fuel: 'Flex', image: 'img/preview-928x522-removebg-preview (1).png', condition: 'Seminovo' },
-        { name: 'Fiat Pulse', category: 'SUV', year: '2024', km: 9000, price: 105000, transmission: 'Automático', fuel: 'Flex', image: 'img/fiat-pulse-s-design-2024-1--removebg-preview.png', condition: 'Seminovo' },
-        { name: 'Renault Kwid', category: 'Hatch', year: '2023', km: 14000, price: 65000, transmission: 'Manual', fuel: 'Flex', image: 'img/model_main_webp_comprar-zen_15cc794bf7.png-removebg-preview.png', condition: 'Seminovo' },
-        { name: 'BYD Dolphin', category: 'Elétrico', year: '2024', km: 2000, price: 149800, transmission: 'Automático', fuel: 'Elétrico', image: 'img/BYD_DOLPHIN_605_KW_ELETRICO_PLUS_37951412175114395-removebg-preview.png', condition: 'Novo' },
-        { name: 'Caoa Chery Tiggo 5x', category: 'SUV', year: '2022', km: 31000, price: 108000, transmission: 'Automático', fuel: 'Flex', image: 'img/chery_tiggo-5x_2019_1-removebg-preview.png', condition: 'Seminovo' },
-        { name: 'Peugeot 208', category: 'Hatch', year: '2024', km: 700, price: 99900, transmission: 'Automático', fuel: 'Flex', image: 'img/novo_208_2025-removebg-preview.png', condition: 'Novo' },
-        { name: 'Fiat Toro', category: 'Picape', year: '2023', km: 45000, price: 145000, transmission: 'Automático', fuel: 'Diesel', image: 'img/Fiat+Toro+Endurance+2022+frente+parado-removebg-preview.png', condition: 'Seminovo' },
-        { name: 'Toyota Hilux', category: 'Picape', year: '2022', km: 60000, price: 210000, transmission: 'Automático', fuel: 'Diesel', image: 'img/6584651_0_W_65bf4fdeb1-removebg-preview.png', condition: 'Seminovo' },
-        { name: 'Jeep Compass', category: 'SUV', year: '2024', km: 12000, price: 180000, transmission: 'Automático', fuel: 'Flex', image: 'img/fl_progressive_f_webp_q_auto-removebg-preview.png', condition: 'Seminovo' },
-        { name: 'BMW 320i', category: 'Executivo', year: '2022', km: 25000, price: 280000, transmission: 'Automático', fuel: 'Flex', image: 'img/6584651_0_W_65bf4fdeb1-removebg-preview.png', condition: 'Seminovo' }
+        { name: 'Hyundai HB20', category: 'Hatch', year: '2023', km: 15000, price: 85500, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/u42aGgO.png', condition: 'Seminovo' },
+        { name: 'Chevrolet Onix', category: 'Hatch', year: '2022', km: 25000, price: 79900, transmission: 'Manual', fuel: 'Flex', image: 'https://i.imgur.com/h6XypuR.png', condition: 'Seminovo' },
+        { name: 'Fiat Mobi', category: 'Hatch', year: '2023', km: 12000, price: 69900, transmission: 'Manual', fuel: 'Flex', image: 'https://i.imgur.com/QkHt81L.png', condition: 'Seminovo' },
+        { name: 'VW Polo', category: 'Hatch', year: '2024', km: 8000, price: 92000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/sAkgR2z.png', condition: 'Seminovo' },
+        { name: 'Jeep Renegade', category: 'SUV', year: '2022', km: 35000, price: 115800, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/bQk9aJc.png', condition: 'Seminovo' },
+        { name: 'Hyundai Creta', category: 'SUV', year: '2024', km: 10000, price: 135000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/pYqGz2b.png', condition: 'Seminovo' },
+        { name: 'VW T-Cross', category: 'SUV', year: '2023', km: 18000, price: 132000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/Y4M2fYH.png', condition: 'Seminovo' },
+        { name: 'Chevrolet Tracker', category: 'SUV', year: '2023', km: 22000, price: 128000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/mUeYf2z.png', condition: 'Seminovo' },
+        { name: 'Toyota Corolla', category: 'Sedan', year: '2023', km: 20000, price: 150000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/Xq5g0zW.png', condition: 'Seminovo' },
+        { name: 'Honda Civic', category: 'Sedan', year: '2024', km: 500, price: 165000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/J3iE0A8.png', condition: 'Novo' },
+        { name: 'Nissan Kicks', category: 'SUV', year: '2023', km: 28000, price: 112000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/L79Ewz5.png', condition: 'Seminovo' },
+        { name: 'Fiat Pulse', category: 'SUV', year: '2024', km: 9000, price: 105000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/4g4F3qH.png', condition: 'Seminovo' },
+        { name: 'Renault Kwid', category: 'Hatch', year: '2023', km: 14000, price: 65000, transmission: 'Manual', fuel: 'Flex', image: 'https://i.imgur.com/oI2v7a8.png', condition: 'Seminovo' },
+        { name: 'BYD Dolphin', category: 'Elétrico', year: '2024', km: 2000, price: 149800, transmission: 'Automático', fuel: 'Elétrico', image: 'https://i.imgur.com/w9r1f8a.png', condition: 'Novo' },
+        { name: 'Caoa Chery Tiggo 5x', category: 'SUV', year: '2022', km: 31000, price: 108000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/sJ7e8dR.png', condition: 'Seminovo' },
+        { name: 'Peugeot 208', category: 'Hatch', year: '2024', km: 700, price: 99900, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/M6L5d8O.png', condition: 'Novo' },
+        { name: 'Fiat Toro', category: 'Picape', year: '2023', km: 45000, price: 145000, transmission: 'Automático', fuel: 'Diesel', image: 'https://i.imgur.com/lZ2y5pT.png', condition: 'Seminovo' },
+        { name: 'Toyota Hilux', category: 'Picape', year: '2022', km: 60000, price: 210000, transmission: 'Automático', fuel: 'Diesel', image: 'https://i.imgur.com/c6F3b9g.png', condition: 'Seminovo' },
+        { name: 'Jeep Compass', category: 'SUV', year: '2024', km: 12000, price: 180000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/eO3k9fL.png', condition: 'Seminovo' },
+        { name: 'BMW 320i', category: 'Executivo', year: '2022', km: 25000, price: 280000, transmission: 'Automático', fuel: 'Flex', image: 'https://i.imgur.com/uY6dG3k.png', condition: 'Seminovo' }
     ];
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -171,6 +206,8 @@
         const vehicleCountSpan = document.getElementById('vehicle-count');
         const clearFiltersLink = document.getElementById('clear-filters');
         const favoritesLink = document.getElementById('favorites-link');
+        const toggleFiltersBtn = document.getElementById('toggle-filters-btn');
+        const filtersSidebar = document.getElementById('filters-sidebar');
         
         function formatCurrency(value) { return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
 
@@ -216,7 +253,7 @@
                     const vehicleName = card.dataset.name;
                     const vehicle = vehicleData.find(v => v.name === vehicleName);
                     
-                    const phoneNumber = "5511999999999"; // <-- INSIRA SEU NÚMERO DE WHATSAPP AQUI
+                    const phoneNumber = "5511999999999"; 
                     const message = encodeURIComponent(`Olá! Tenho interesse no ${vehicle.name} (${vehicle.year}) e gostaria de mais informações.`);
                     const whatsappLink = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
 
@@ -258,14 +295,11 @@
                         const total_price = vehicle.price;
                         const downpayment = parseFloat(downpaymentSlider.value);
                         const installments = parseInt(installmentsSlider.value);
-                        const interest_rate = 0.0199; // Taxa de 1.99% a.m.
-
+                        const interest_rate = 0.0199;
                         downpaymentValueEl.textContent = formatCurrency(downpayment);
                         installmentsValueEl.textContent = `${installments}x`;
-
                         const financed_amount = total_price - downpayment;
                         if (financed_amount <= 0) { installmentResultEl.innerHTML = formatCurrency(0); return; }
-
                         const monthly_payment = financed_amount * (interest_rate * Math.pow(1 + interest_rate, installments)) / (Math.pow(1 + interest_rate, installments) - 1);
                         installmentResultEl.innerHTML = `~ ${formatCurrency(monthly_payment)}`;
                     }
@@ -282,6 +316,13 @@
         sortSelect.addEventListener('change', renderVehicles);
         clearFiltersLink.addEventListener('click', (e) => { e.preventDefault(); filterForm.reset(); renderVehicles(); });
         favoritesLink.addEventListener('click', (e) => { e.preventDefault(); alert('Funcionalidade de Favoritos em desenvolvimento!'); });
+        toggleFiltersBtn.addEventListener('click', () => {
+            filtersSidebar.classList.toggle('visible');
+            const isVisible = filtersSidebar.classList.contains('visible');
+            toggleFiltersBtn.querySelector('span').textContent = isVisible ? 'Ocultar Filtros' : 'Mostrar Filtros';
+            toggleFiltersBtn.querySelector('i').className = isVisible ? 'fa-solid fa-times' : 'fa-solid fa-filter';
+        });
+
         renderVehicles();
     });
     </script>
