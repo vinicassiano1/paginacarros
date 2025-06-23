@@ -33,77 +33,90 @@
         .site-container { width: 95%; max-width: 1800px; margin: 0 auto; padding: 0 1rem; }
         .hidden { display: none !important; }
 
-        /* --- HEADER COM ANIMAÇÃO CENTRALIZADA --- */
-        .sticky-header {
-            position: sticky;
-            top: 0;
-            z-index: 900;
-            height: 120px; 
-            padding: 1rem 2rem;
+        /* --- HEADER COM ANIMAÇÃO --- */
+        .main-header {
+            height: 80vh;
+            position: relative;
+            z-index: 1;
+        }
+        .header-background {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover; background-position: center;
+            transition: opacity 0.5s ease;
+        }
+        .header-background::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, var(--bg-dark-primary) 5%, transparent 60%);
+        }
+        .sticky-nav {
+            position: sticky; top: 0; z-index: 900;
+            height: 100px;
             transition: height 0.4s ease, background-color 0.4s ease;
         }
         .header-container {
-            display: flex;
-            justify-content: center; /* Mantém a logo sempre no centro */
-            align-items: center;
-            height: 100%;
-            position: relative;
+            display: flex; justify-content: center; align-items: center;
+            height: 100%; position: relative;
+            max-width: 1800px; margin: 0 auto; padding: 0 2rem;
         }
         .logo-wrapper {
+            position: absolute;
+            top: 50vh; /* Centralizado na viewport */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
             transition: all 0.4s ease;
         }
         .logo-wrapper img {
-            max-height: 80px; /* Tamanho inicial da logo */
+            max-height: 120px;
             transition: max-height 0.4s ease;
             height: auto;
         }
         
-        .sticky-header.scrolled {
-            height: 80px; /* Altura final da barra */
+        body.scrolled .sticky-nav {
+            height: 80px;
             background-color: rgba(10, 10, 10, 0.85);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-color);
         }
-        .sticky-header.scrolled .logo-wrapper img {
-            max-height: 45px; /* Tamanho final da logo */
-        }
-
-        .hero-section {
-            height: 70vh;
-            margin-top: -120px;
-            width: 100vw;
-            left: 50%;
-            transform: translateX(-50%);
-            position: relative;
-            background-image: url('img/pexels-pixabay-261985.jpg');
-            background-size: cover;
-            background-position: center;
-        }
-        .hero-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to top, var(--bg-dark-primary) 5%, transparent 60%);
-        }
+        body.scrolled .logo-wrapper { top: 40px; }
+        body.scrolled .logo-wrapper img { max-height: 45px; }
         
+        body.sub-page .main-header { display: none; }
+        body.sub-page .sticky-nav {
+             height: 80px; background-color: var(--bg-dark-secondary);
+             border-bottom: 1px solid var(--border-color);
+        }
+        body.sub-page .logo-wrapper {
+             top: 40px; transform: translate(-50%, -50%);
+        }
+         body.sub-page .logo-wrapper img { max-height: 45px; }
+
+        /* --- ESTILO DO BOTÃO DE MENU (MODIFICADO) --- */
         .menu-trigger {
-            position: absolute; /* Posicionado em relação ao header-container */
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
+            position: fixed; /* Fixa o botão na tela */
+            right: 2rem;     /* Posição à direita */
+            top: 2rem;       /* Posição no topo */
+            z-index: 1100;   /* Z-index alto para ficar sobre todos os elementos */
             display: flex;
             align-items: center;
             gap: 0.8rem;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.5); /* Fundo semi-transparente para melhor visibilidade */
             padding: 0.8rem 1.2rem;
             border-radius: 50px;
             color: var(--text-primary);
             cursor: pointer;
             transition: background 0.3s;
         }
-        .sticky-header.scrolled .menu-trigger {
-            background: transparent;
+        body.scrolled .menu-trigger, body.sub-page .menu-trigger {
+            background: rgba(0,0,0,0.5); /* Garante que o fundo não fique transparente */
         }
-        .menu-trigger:hover { background: rgba(255,255,255,0.1); }
-        .menu-trigger i { font-size: 1.2rem; }
+        .menu-trigger:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .menu-trigger i {
+            font-size: 1.2rem;
+        }
 
         .menu-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -123,7 +136,7 @@
         .close-menu-btn { position: absolute; top: 2rem; right: 2rem; background: none; border: none; font-size: 2rem; color: var(--text-secondary); cursor: pointer; transition: color 0.3s, transform 0.3s; }
         .close-menu-btn:hover { color: var(--accent-primary); transform: rotate(90deg); }
 
-        .page-content { padding: 4rem 0; }
+        .page-content { padding: 2rem 0; }
         .main-body { display: flex; gap: 2rem; }
         .filters-sidebar { width: 250px; flex-shrink: 0; transition: all 0.3s ease-in-out; }
         .filter-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
@@ -135,7 +148,44 @@
         .filter-group input:checked + span { color: var(--accent-primary); }
         .filter-group select { width: 100%; background-color: var(--bg-dark-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.8rem; border-radius: 4px; }
         .main-content { flex: 1; }
-        .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        
+        .top-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+        
+        .vehicle-type-toggle {
+            display: flex;
+            align-items: center;
+            background: var(--bg-dark-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 0.5rem;
+            position: relative;
+        }
+        .toggle-btn {
+            background: none; border: none;
+            color: var(--text-secondary);
+            padding: 0.5rem 1.5rem;
+            cursor: pointer;
+            z-index: 2;
+            transition: color 0.3s;
+            font-size: 1rem;
+        }
+        .toggle-btn.active { color: var(--accent-primary); }
+        .toggle-slider {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            width: calc(50% - 0.5rem);
+            height: calc(100% - 1rem);
+            background-color: var(--accent-special);
+            border-radius: 50px;
+            z-index: 1;
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .vehicle-type-toggle.moto-active .toggle-slider {
+            transform: translateX(calc(100% - 0.5rem));
+        }
+
+        .content-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
         .content-header h1 { font-size: 1.8rem; font-weight: 500; }
         .vehicle-count { font-size: 0.8rem; font-weight: 400; color: var(--text-secondary); margin-left: 1rem; background-color: var(--border-color); padding: 0.2rem 0.5rem; border-radius: 4px; }
         .sort-by { display: flex; align-items: center; gap: 0.5rem; }
@@ -157,25 +207,31 @@
         .card-footer { padding: 1.5rem; margin-top: auto; border-top: 1px solid var(--border-color); text-align: right; }
         .price-info .price-label { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.25rem; }
         .price-info .price-value { font-size: 1.8rem; font-weight: 700; color: var(--accent-primary); }
-        .details-view { padding: 1rem; background-color: var(--bg-dark-secondary); border-radius: 8px; }
+        
+        .details-view { padding: 1rem; background-color: var(--bg-dark-primary); }
         .details-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem; margin-bottom: 2rem; }
         .details-header h1 { font-size: 2.5rem; font-weight: 700; }
         .back-button { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color); padding: 0.8rem 1.5rem; border-radius: 5px; cursor: pointer; font-size: 1rem; transition: background-color 0.3s; }
         .back-button:hover { background-color: var(--border-color); }
         .details-content { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
-        .gallery .main-image { width: 100%; height: 400px; object-fit: contain; background-color: var(--bg-card); border-radius: 8px; margin-bottom: 1rem; }
-        .details-info .price-value { font-size: 2.5rem; font-weight: 700; margin-bottom: 2rem; }
-        .specs-list { list-style: none; margin-bottom: 2rem; }
-        .specs-list li { display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid var(--border-color); }
-        .specs-list li span { color: var(--text-secondary); }
-        .financing-simulator { background-color: rgba(42, 42, 42, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); }
+        .gallery .main-image-container { width: 100%; height: 450px; background-color: var(--bg-card); border-radius: 8px; margin-bottom: 1rem; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+        .gallery .main-image { width:100%; height:100%; object-fit:contain; }
+        .thumbnails { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 1rem; }
+        .thumbnails img { width: 100%; height: 60px; object-fit: cover; border-radius: 4px; cursor: pointer; border: 2px solid transparent; opacity: 0.6; transition: all 0.3s; }
+        .thumbnails img:hover, .thumbnails img.active { border-color: var(--accent-special); opacity: 1; }
+        
+        .details-info .price-value { font-size: 2.5rem; font-weight: 700; margin-bottom: 1.5rem; }
+        .specs-list { list-style: none; margin-bottom: 1.5rem; columns: 2; gap: 1rem; }
+        .specs-list li { display: flex; align-items: center; gap: 0.8rem; padding: 0.5rem 0; color: var(--text-secondary); }
+        .specs-list i { color: var(--accent-special); width: 20px; text-align: center; }
+
+        .financing-simulator { background-color: rgba(42, 42, 42, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 1.5rem; }
         .financing-simulator h3 { font-size: 1.2rem; margin-bottom: 1.5rem; text-align: center; }
         .simulator-control { margin-bottom: 1.5rem; }
         .simulator-control label { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem; }
         .simulator-control span { font-weight: 700; color: var(--accent-special); }
         input[type="range"] { -webkit-appearance: none; width: 100%; height: 8px; background: var(--border-color); border-radius: 5px; outline: none; }
         input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; background: var(--accent-special); cursor: pointer; border-radius: 50%; }
-        input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: var(--accent-special); cursor: pointer; border-radius: 50%; }
         .simulator-result { text-align: center; background: var(--bg-dark-primary); padding: 1rem; border-radius: 5px; }
         .simulator-result p { color: var(--text-secondary); font-size: 0.9rem; }
         .simulator-result .installment-value { font-size: 2rem; color: var(--accent-primary); font-weight: 700; }
@@ -185,16 +241,24 @@
         .filters-toggle-mobile { display: none; }
         .page-title { font-family: 'Cormorant Garamond', serif; font-size: 3rem; text-align: center; margin-bottom: 2rem; color: var(--accent-special); }
         
-        .contact-page-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; }
-        .contact-card { background: var(--bg-card); padding: 2rem; border-radius: 8px; }
-        .contact-card h3 { font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--accent-special); border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; }
-        .contact-card p { color: var(--text-secondary); line-height: 1.8; margin-bottom: 1rem; }
-        .contact-card p strong { color: var(--text-primary); }
-        .store-status { display: inline-block; padding: 0.4rem 0.8rem; border-radius: 20px; font-weight: bold; }
-        .store-status.open { background-color: var(--status-open); color: #fff; }
-        .store-status.closed { background-color: var(--status-closed); color: #fff; }
-        .map-placeholder { width: 100%; height: 300px; background-color: var(--bg-dark-primary); border-radius: 8px; display: flex; justify-content: center; align-items: center; color: var(--text-secondary); margin-bottom: 1rem; }
-        .map-button { display: inline-block; width: 100%; text-align: center; background: var(--accent-special); color: #000; padding: 1rem; text-decoration: none; border-radius: 5px; font-weight: bold; }
+        .main-footer {
+            background-color: var(--bg-dark-secondary);
+            padding: 4rem 0;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border-color);
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        .footer-col h4 { font-size: 1.2rem; color: var(--accent-special); margin-bottom: 1.5rem; }
+        .footer-col p, .footer-col a { color: var(--text-secondary); text-decoration: none; line-height: 1.8; transition: color 0.3s; }
+        .footer-col a:hover { color: var(--accent-primary); }
+        .footer-logo { max-width: 150px; margin-bottom: 1rem; }
+        .social-icons { display: flex; gap: 1rem; margin-top: 1rem; }
+        .social-icons a { font-size: 1.5rem; }
+        .footer-contact-item { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
         
         @media (max-width: 900px) {
             .main-body { flex-direction: column; }
@@ -209,18 +273,17 @@
             .filters-sidebar { width: 100%; max-height: 0; overflow: hidden; padding: 0; margin: 0; border: none; opacity: 0; }
             .filters-sidebar.visible { max-height: 1200px; opacity: 1; padding: 0; margin-bottom: 2rem; }
             .content-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
-            .sticky-header { padding: 1rem; height: auto; }
-            .sticky-header.scrolled { height: 70px; }
-            .logo-wrapper { /* A logo grande é controlada pela section hero, header só contém a pequena */ }
             .sticky-header.scrolled .logo-wrapper img { max-height: 35px; }
+            .specs-list { columns: 1; }
+            .top-controls { justify-content: center; }
         }
     </style>
 </head>
 <body>
     <div class="site-wrapper">
-        <header class="sticky-header" id="sticky-header">
+        <header class="sticky-nav" id="sticky-nav"> <!-- Nome da classe alterado para evitar confusão -->
             <div class="header-container">
-                <div class="logo-wrapper">
+                <div class="logo-wrapper" id="logo-wrapper">
                      <img src="img/21787967-carro-concessionaria-o-negocio-criativo-logotipo-projeto-gratis-vetor-removebg-preview.png" alt="Logo da Vision Carros">
                 </div>
                  <div class="menu-trigger" id="menu-trigger">
@@ -230,8 +293,8 @@
             </div>
         </header>
 
-        <section class="hero-section">
-            <div class="hero-overlay"></div>
+        <section class="main-header" id="main-header">
+            <div class="header-background"></div>
         </section>
 
         <div class="menu-overlay" id="menu-overlay">
@@ -253,14 +316,43 @@
                             <div class="filter-title"> <h2>Filtros</h2> <a id="clear-filters">LIMPAR TUDO</a> </div>
                             <div class="filter-group"> <h3>Condição</h3> <label><input type="radio" name="condition" value="all" checked><span>Todos</span></label> <label><input type="radio" name="condition" value="Novo"><span>Novos</span></label> <label><input type="radio" name="condition" value="Seminovo"><span>Seminovos</span></label> </div>
                             <div class="filter-group"> <h3>Preço</h3> <label><input type="radio" name="price" value="all" checked><span>Qualquer Valor</span></label> <label><input type="radio" name="price" value="0-80000"><span>Até R$80.000</span></label> <label><input type="radio" name="price" value="80001-120000"><span>R$80.001 - R$120.000</span></label> <label><input type="radio" name="price" value="120001-200000"><span>R$120.001 - R$200.000</span></label> <label><input type="radio" name="price" value="200001-9999999"><span>Acima de R$200.000</span></label> </div>
-                            <div class="filter-group"> <h3>Categoria</h3> <label><input type="checkbox" name="category" value="Picape"><span>Picape</span></label> <label><input type="checkbox" name="category" value="SUV"><span>SUV</span></label> <label><input type="checkbox" name="category" value="Sedan"><span>Sedan</span></label> <label><input type="checkbox" name="category" value="Hatch"><span>Hatch</span></label> <label><input type="checkbox" name="category" value="Executivo"><span>Executivo</span></label> <label><input type="checkbox" name="category" value="Elétrico"><span>Elétrico</span></label> </div>
+                            
+                            <!-- Início da Seção de Categorias Dinâmicas -->
+                            <div class="filter-group">
+                                <h3>Categoria</h3>
+                                <div id="car-categories">
+                                    <label><input type="checkbox" name="category" value="Picape"><span>Picape</span></label>
+                                    <label><input type="checkbox" name="category" value="SUV"><span>SUV</span></label>
+                                    <label><input type="checkbox" name="category" value="Sedan"><span>Sedan</span></label>
+                                    <label><input type="checkbox" name="category" value="Hatch"><span>Hatch</span></label>
+                                    <label><input type="checkbox" name="category" value="Executivo"><span>Executivo</span></label>
+                                    <label><input type="checkbox" name="category" value="Elétrico"><span>Elétrico</span></label>
+                                </div>
+                                <div id="moto-categories" class="hidden">
+                                    <label><input type="checkbox" name="category" value="Naked"><span>Naked</span></label>
+                                    <label><input type="checkbox" name="category" value="Trail"><span>Trail</span></label>
+                                </div>
+                            </div>
+                            <!-- Fim da Seção de Categorias Dinâmicas -->
+                            
                             <div class="filter-group"> <h3>Ano</h3> <select name="year"><option value="all">Todos</option><option>2024</option><option>2023</option><option>2022</option><option>2021</option></select> </div>
                             <div class="filter-group"> <h3>Câmbio</h3> <select name="transmission"><option value="all">Todos</option><option>Automático</option><option>Manual</option></select> </div>
                         </form>
                     </aside>
                     <section class="main-content">
-                        <button class="filters-toggle-mobile" id="toggle-filters-btn"> <i class="fa-solid fa-filter"></i> <span>Mostrar Filtros</span> </button>
-                        <div class="content-header" id="content-header"> <h1>Veículos à Venda <span id="vehicle-count" class="vehicle-count"></span></h1> <div class="sort-by"> <label for="sort">ORDENAR POR</label> <select id="sort" name="sort"> <option value="popular">MAIS RELEVANTES</option> <option value="price-asc">PREÇO: MENOR AO MAIOR</option> <option value="price-desc">PREÇO: MAIOR AO MENOR</option> </select> </div> </div>
+                        <button class="filters-toggle-mobile" id="toggle-filters-btn">
+                            <i class="fa-solid fa-filter"></i>
+                            <span>Mostrar Filtros</span>
+                        </button>
+                        <div class="top-controls">
+                            <div class="vehicle-type-toggle" id="vehicle-type-toggle">
+                                <div class="toggle-slider"></div>
+                                <button class="toggle-btn active" data-type="car"><i class="fas fa-car"></i> Carros</button>
+                                <button class="toggle-btn" data-type="moto"><i class="fas fa-motorcycle"></i> Motos</button>
+                            </div>
+                            <div class="sort-by"> <label for="sort">ORDENAR POR</label> <select id="sort" name="sort"> <option value="popular">MAIS RELEVANTES</option> <option value="price-asc">PREÇO: MENOR AO MAIOR</option> <option value="price-desc">PREÇO: MAIOR AO MENOR</option> </select> </div>
+                        </div>
+                        <h1 id="content-title" style="font-size: 1.8rem; font-weight: 500; margin-bottom: 1.5rem;">Veículos à Venda <span id="vehicle-count" class="vehicle-count"></span></h1>
                         <div id="vehicle-grid" class="vehicle-grid"></div>
                     </section>
                 </main>
@@ -283,56 +375,96 @@
 
             <section id="contact-page" class="page-content hidden">
                 <h1 class="page-title">Contato e Localização</h1>
-                <div class="contact-page-grid">
-                    <div class="contact-card">
+                <div class="contact-page-grid" style="display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                    <div class="contact-card" style="background: var(--bg-card); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color);">
                         <h3>Informações da Loja</h3>
                         <p><strong>Nome da Loja:</strong> Vision Carros</p>
                         <p><strong>Endereço:</strong> Av. Exemplo, 1234, Bairro Nobre, São Paulo - SP</p>
                         <p><strong>Telefone:</strong> (11) 99999-9999</p>
                         <p><strong>Email:</strong> contato@visioncarros.com.br</p>
                     </div>
-                    <div class="contact-card">
+                    <div class="contact-card" style="background: var(--bg-card); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color);">
                         <h3>Horário de Funcionamento</h3>
                         <p><strong>Segunda a Sexta:</strong> 08:00 às 18:00</p>
                         <p><strong>Sábados:</strong> 08:00 às 14:00</p>
                         <p><strong>Domingos:</strong> Fechado</p>
-                        <p><strong>Status:</strong> <span id="store-status" class="store-status"></span></p>
+                        <p><strong>Status:</strong> <span id="store-status" style="font-weight: bold;"></span></p>
                     </div>
-                    <div class="contact-card">
+                    <div class="contact-card" style="background: var(--bg-card); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color);">
                         <h3>Nossa Localização</h3>
-                        <div class="map-placeholder">
+                        <div class="map-placeholder" style="height: 150px; margin-bottom: 1rem; background-color: #333; border-radius: 8px;">
                            <img src="https://i.imgur.com/Za5A12t.png" alt="Exemplo de mapa" style="width:100%; height: 100%; object-fit: cover; border-radius: 8px;">
                         </div>
-                        <a href="https://maps.google.com" target="_blank" class="map-button">Ver no Google Maps</a>
+                        <a href="https://maps.google.com" target="_blank" class="map-button" style="display: block; text-align: center; background: var(--accent-special); color: var(--bg-dark-primary); padding: 0.8rem; border-radius: 5px; text-decoration: none; font-weight: bold;">Ver no Google Maps</a>
                     </div>
                 </div>
             </section>
 
-            <section id="vehicle-details" class="details-view hidden"></section>
+            <section id="vehicle-details" class="page-content hidden"></section>
         </div>
+
+        <footer class="main-footer">
+            <div class="site-container footer-grid">
+                <div class="footer-col">
+                    <img src="https://i.imgur.com/uC0YyOO.png" alt="Logo Vision Carros" class="footer-logo">
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Contato</h4>
+                    <div class="footer-contact-item">
+                        <i class="fas fa-phone"></i>
+                        <p> (11) 99999-9999</p>
+                    </div>
+                     <div class="footer-contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <p>contato@visioncarros.com.br</p>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Mais para si</h4>
+                    <p><a href="#">Quem Somos</a></p>
+                    <p><a href="#">Veículos</a></p>
+                    <p><a href="#">Intermediação de Crédito</a></p>
+                    <p><a href="#">Venda seu Carro</a></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Precisa de Ajuda?</h4>
+                    <p>Nossa equipe está pronta para te atender. Entre em contato pelo WhatsApp!</p>
+                    <a href="https://api.whatsapp.com/send?phone=5511999999999" target="_blank" class="whatsapp-button" style="margin-top: 1rem; width: fit-content; padding: 0.8rem 1.5rem;"><i class="fab fa-whatsapp"></i> Fale Conosco</a>
+                </div>
+            </div>
+        </footer>
+    </div>
 
         <script>
         const vehicleData = [
-            { name: 'Hyundai HB20', category: 'Hatch', year: '2023', km: 15000, price: 85500, transmission: 'Automático', fuel: 'Flex', image: 'img/4178bfec040b1cd0ee9f0b5bb88ae6be-removebg-preview.png', condition: 'Seminovo' },
-            { name: 'Chevrolet Onix', category: 'Hatch', year: '2022', km: 25000, price: 79900, transmission: 'Manual', fuel: 'Flex', image: 'img/model_main_webp_comprar-lt-1-0-turbo-at-pacote-r7g_3676780d31.png-removebg-preview.png', condition: 'Seminovo' },
-            { name: 'Fiat Mobi', category: 'Hatch', year: '2023', km: 12000, price: 69900, transmission: 'Manual', fuel: 'Flex', image: 'img/download-removebg-preview.png', condition: 'Seminovo' },
-            { name: 'VW Polo', category: 'Hatch', year: '2024', km: 8000, price: 92000, transmission: 'Automático', fuel: 'Flex', image: 'img/43z4rqy9abur19o0e2gdqpdgt-removebg-preview.png', condition: 'Seminovo' },
-            { name: 'Jeep Renegade', category: 'SUV', year: '2022', km: 35000, price: 115800, transmission: 'Automático', fuel: 'Flex', image: 'img/Jeep-Renegade-Sport-11-removebg-preview.png', condition: 'Seminovo' },
-            { name: 'Hyundai Creta', category: 'SUV', year: '2024', km: 10000, price: 135000, transmission: 'Automático', fuel: 'Flex', image: 'img/hyundai-creta-platinum-safety-2024-removebg-preview.png', condition: 'Seminovo' },
-            { name: 'VW T-Cross', category: 'SUV', year: '2023', km: 18000, price: 132000, transmission: 'Automático', fuel: 'Flex', image: 'img/tcross-1hv5g73xttbnd-removebg-preview.png', condition: 'Seminovo' },
-            { name: 'Chevrolet Tracker', category: 'SUV', year: '2023', km: 22000, price: 128000, transmission: 'Automático', fuel: 'Flex', image: 'img/comprar-lt-1-0-turbo-pacote-rfd_00da5d50ca-removebg-preview.png', condition: 'Seminovo' },
-            { name: 'Toyota Corolla', category: 'Sedan', year: '2023', km: 20000, price: 150000, transmission: 'Automático', fuel: 'Flex', image: 'img/2023-toyota-corolla-jdm-removebg-preview.png', condition: 'Seminovo' },
-            { name: 'Honda Civic', category: 'Sedan', year: '2024', km: 500, price: 165000, transmission: 'Automático', fuel: 'Flex', image: 'img/fl_progressive_f_webp_q_80-removebg-preview.png', condition: 'Novo' },
-            { name: 'Nissan Kicks', category: 'SUV', year: '2023', km: 28000, price: 112000, transmission: 'Automático', fuel: 'Flex', image: 'img/preview-928x522-removebg-preview (1).png', condition: 'Seminovo' },
-            { name: 'Fiat Pulse', category: 'SUV', year: '2024', km: 9000, price: 105000, transmission: 'Automático', fuel: 'Flex', image: 'img/fiat-pulse-s-design-2024-1--removebg-preview.png', condition: 'Seminovo' },
-            { name: 'Renault Kwid', category: 'Hatch', year: '2023', km: 14000, price: 65000, transmission: 'Manual', fuel: 'Flex', image: 'img/model_main_webp_comprar-zen_15cc794bf7.png-removebg-preview.png', condition: 'Seminovo' },
-            { name: 'BYD Dolphin', category: 'Elétrico', year: '2024', km: 2000, price: 149800, transmission: 'Automático', fuel: 'Elétrico', image: 'img/BYD_DOLPHIN_605_KW_ELETRICO_PLUS_37951412175114395-removebg-preview.png', condition: 'Novo' },
-            { name: 'Caoa Chery Tiggo 5x', category: 'SUV', year: '2022', km: 31000, price: 108000, transmission: 'Automático', fuel: 'Flex', image: 'img/chery_tiggo-5x_2019_1-removebg-preview.png', condition: 'Seminovo' },
-            { name: 'Peugeot 208', category: 'Hatch', year: '2024', km: 700, price: 99900, transmission: 'Automático', fuel: 'Flex', image: 'img/novo_208_2025-removebg-preview.png', condition: 'Novo' },
-            { name: 'Fiat Toro', category: 'Picape', year: '2023', km: 45000, price: 145000, transmission: 'Automático', fuel: 'Diesel', image: 'img/Fiat+Toro+Endurance+2022+frente+parado-removebg-preview.png', condition: 'Seminovo' },
-            { name: 'Toyota Hilux', category: 'Picape', year: '2022', km: 60000, price: 210000, transmission: 'Automático', fuel: 'Diesel', image: 'img/6584651_0_W_65bf4fdeb1-removebg-preview.png', condition: 'Seminovo' },
-            { name: 'Jeep Compass', category: 'SUV', year: '2024', km: 12000, price: 180000, transmission: 'Automático', fuel: 'Flex', image: 'img/fl_progressive_f_webp_q_auto-removebg-preview.png', condition: 'Seminovo' },
-            { name: 'BMW 320i', category: 'Executivo', year: '2022', km: 25000, price: 280000, transmission: 'Automático', fuel: 'Flex', image: 'img/6584651_0_W_65bf4fdeb1-removebg-preview.png', condition: 'Seminovo' }
+             { type: 'car', name: 'Hyundai HB20', category: 'Hatch', year: '2023', km: 15000, price: 85500, transmission: 'Automático', fuel: 'Flex', color: 'Branco', doors: 4, seats: 5, images: ['img/4178bfec040b1cd0ee9f0b5bb88ae6be-removebg-preview.png', 'img/4178bfec040b1cd0ee9f0b5bb88ae6be-removebg-preview.png', 'img/4178bfec040b1cd0ee9f0b5bb88ae6be-removebg-preview.png'], condition: 'Seminovo' },
+            { type: 'car', name: 'Chevrolet Onix', category: 'Hatch', year: '2022', km: 25000, price: 79900, transmission: 'Manual', fuel: 'Flex', color: 'Prata', doors: 4, seats: 5, images: ['img/model_main_webp_comprar-lt-1-0-turbo-at-pacote-r7g_3676780d31.png-removebg-preview.png', 'img/model_main_webp_comprar-lt-1-0-turbo-at-pacote-r7g_3676780d31.png-removebg-preview.png', 'img/model_main_webp_comprar-lt-1-0-turbo-at-pacote-r7g_3676780d31.png-removebg-preview.png'], condition: 'Seminovo' },
+            { type: 'car', name: 'Fiat Mobi', category: 'Hatch', year: '2023', km: 12000, price: 69900, transmission: 'Manual', fuel: 'Flex', color: 'Vermelho', doors: 4, seats: 5, images: ['img/download-removebg-preview.png', 'img/download-removebg-preview.png', 'img/download-removebg-preview.png'], condition: 'Seminovo' },
+            { type: 'car', name: 'VW Polo', category: 'Hatch', year: '2024', km: 8000, price: 92000, transmission: 'Automático', fuel: 'Flex', color: 'Cinza', doors: 4, seats: 5, images: ['img/43z4rqy9abur19o0e2gdqpdgt-removebg-preview.png', 'img/43z4rqy9abur19o0e2gdqpdgt-removebg-preview.png', 'img/43z4rqy9abur19o0e2gdqpdgt-removebg-preview.png'], condition: 'Seminovo' },
+            { type: 'car', name: 'Jeep Renegade', category: 'SUV', year: '2022', km: 35000, price: 115800, transmission: 'Automático', fuel: 'Flex', color: 'Preto', doors: 4, seats: 5, images: ['img/Jeep-Renegade-Sport-11-removebg-preview.png', 'img/Jeep-Renegade-Sport-11-removebg-preview.png', 'img/Jeep-Renegade-Sport-11-removebg-preview.png'], condition: 'Seminovo' },
+            { type: 'car', name: 'Hyundai Creta', category: 'SUV', year: '2024', km: 10000, price: 135000, transmission: 'Automático', fuel: 'Flex', color: 'Branco', doors: 4, seats: 5, images: ['img/hyundai-creta-platinum-safety-2024-removebg-preview.png', 'img/hyundai-creta-platinum-safety-2024-removebg-preview.png', 'img/hyundai-creta-platinum-safety-2024-removebg-preview.png'], condition: 'Seminovo' },
+            { type: 'car', name: 'VW T-Cross', category: 'SUV', year: '2023', km: 18000, price: 132000, transmission: 'Automático', fuel: 'Flex', color: 'Azul', doors: 4, seats: 5, images: ['img/tcross-1hv5g73xttbnd-removebg-preview.png', 'img/tcross-1hv5g73xttbnd-removebg-preview.png', 'img/tcross-1hv5g73xttbnd-removebg-preview.png'], condition: 'Seminovo' },
+            { type: 'car', name: 'Chevrolet Tracker', category: 'SUV', year: '2023', km: 22000, price: 128000, transmission: 'Automático', fuel: 'Flex', color: 'Prata', doors: 4, seats: 5, images: ['img/comprar-lt-1-0-turbo-pacote-rfd_00da5d50ca-removebg-preview.png', 'img/comprar-lt-1-0-turbo-pacote-rfd_00da5d50ca-removebg-preview.png', 'img/comprar-lt-1-0-turbo-pacote-rfd_00da5d50ca-removebg-preview.png'], condition: 'Seminovo' },
+            { type: 'car', name: 'Toyota Corolla', category: 'Sedan', year: '2023', km: 20000, price: 150000, transmission: 'Automático', fuel: 'Flex', color: 'Preto', doors: 4, seats: 5, images: ['img/2023-toyota-corolla-jdm-removebg-preview.png', 'img/2023-toyota-corolla-jdm-removebg-preview.png', 'img/2023-toyota-corolla-jdm-removebg-preview.png'], condition: 'Seminovo' },
+            { type: 'car', name: 'Honda Civic', category: 'Sedan', year: '2024', km: 500, price: 165000, transmission: 'Automático', fuel: 'Flex', color: 'Branco', doors: 4, seats: 5, images: ['img/fl_progressive_f_webp_q_80-removebg-preview.png', 'img/fl_progressive_f_webp_q_80-removebg-preview.png', 'img/fl_progressive_f_webp_q_80-removebg-preview.png'], condition: 'Novo' },
+            { type: 'car', name: 'Nissan Kicks', category: 'SUV', year: '2023', km: 28000, price: 112000, transmission: 'Automático', fuel: 'Flex', color: 'Cinza', doors: 4, seats: 5, images: ['img/preview-928x522-removebg-preview (1).png', 'img/preview-928x522-removebg-preview (1).png', 'img/preview-928x522-removebg-preview (1).png'], condition: 'Seminovo' },
+            { type: 'car', name: 'Fiat Pulse', category: 'SUV', year: '2024', km: 9000, price: 105000, transmission: 'Automático', fuel: 'Flex', color: 'Vermelho', doors: 4, seats: 5, images: ['img/fiat-pulse-s-design-2024-1--removebg-preview.png', 'img/fiat-pulse-s-design-2024-1--removebg-preview.png', 'img/fiat-pulse-s-design-2024-1--removebg-preview.png'], condition: 'Seminovo' },
+            { type: 'car', name: 'Renault Kwid', category: 'Hatch', year: '2023', km: 14000, price: 65000, transmission: 'Manual', fuel: 'Flex', color: 'Branco', doors: 4, seats: 5, images: ['img/model_main_webp_comprar-zen_15cc794bf7.png-removebg-preview.png', 'img/model_main_webp_comprar-zen_15cc794bf7.png-removebg-preview.png', 'img/model_main_webp_comprar-zen_15cc794bf7.png-removebg-preview.png'], condition: 'Seminovo' },
+            { type: 'car', name: 'BYD Dolphin', category: 'Elétrico', year: '2024', km: 2000, price: 149800, transmission: 'Automático', fuel: 'Elétrico', color: 'Cinza', doors: 4, seats: 5, images: ['img/BYD_DOLPHIN_605_KW_ELETRICO_PLUS_37951412175114395-removebg-preview.png', 'img/BYD_DOLPHIN_605_KW_ELETRICO_PLUS_37951412175114395-removebg-preview.png', 'img/BYD_DOLPHIN_605_KW_ELETRICO_PLUS_37951412175114395-removebg-preview.png'], condition: 'Novo' },
+            { type: 'car', name: 'Caoa Chery Tiggo 5x', category: 'SUV', year: '2022', km: 31000, price: 108000, transmission: 'Automático', fuel: 'Flex', color: 'Branco', doors: 4, seats: 5, images: ['img/chery_tiggo-5x_2019_1-removebg-preview.png', 'img/chery_tiggo-5x_2019_1-removebg-preview.png', 'img/chery_tiggo-5x_2019_1-removebg-preview.png'], condition: 'Seminovo' },
+            { type: 'car', name: 'Peugeot 208', category: 'Hatch', year: '2024', km: 700, price: 99900, transmission: 'Automático', fuel: 'Flex', color: 'Azul', doors: 4, seats: 5, images: ['img/novo_208_2025-removebg-preview.png', 'img/novo_208_2025-removebg-preview.png', 'img/novo_208_2025-removebg-preview.png'], condition: 'Novo' },
+            { type: 'car', name: 'Fiat Toro', category: 'Picape', year: '2023', km: 45000, price: 145000, transmission: 'Automático', fuel: 'Diesel', color: 'Vinho', doors: 4, seats: 5, images: ['img/Fiat+Toro+Endurance+2022+frente+parado-removebg-preview.png', 'img/Fiat+Toro+Endurance+2022+frente+parado-removebg-preview.png', 'img/Fiat+Toro+Endurance+2022+frente+parado-removebg-preview.png'], condition: 'Seminovo' },
+            { type: 'car', name: 'Toyota Hilux', category: 'Picape', year: '2022', km: 60000, price: 210000, transmission: 'Automático', fuel: 'Diesel', color: 'Prata', doors: 4, seats: 5, images: ['img/6584651_0_W_65bf4fdeb1-removebg-preview.png', 'img/6584651_0_W_65bf4fdeb1-removebg-preview.png', 'img/6584651_0_W_65bf4fdeb1-removebg-preview.png'], condition: 'Seminovo' },
+            { type: 'car', name: 'Jeep Compass', category: 'SUV', year: '2024', km: 12000, price: 180000, transmission: 'Automático', fuel: 'Flex', color: 'Cinza Chumbo', doors: 4, seats: 5, images: ['img/fl_progressive_f_webp_q_auto-removebg-preview.png', 'img/fl_progressive_f_webp_q_auto-removebg-preview.png', 'img/fl_progressive_f_webp_q_auto-removebg-preview.png'], condition: 'Seminovo' },
+            { type: 'car', name: 'BMW 320i', category: 'Executivo', year: '2022', km: 25000, price: 280000, transmission: 'Automático', fuel: 'Flex', color: 'Preto', doors: 4, seats: 5, images: ['img/6584651_0_W_65bf4fdeb1-removebg-preview.png', 'img/6584651_0_W_65bf4fdeb1-removebg-preview.png', 'img/6584651_0_W_65bf4fdeb1-removebg-preview.png'], condition: 'Seminovo' },
+            { type: 'moto', name: 'Honda CB 300F', category: 'Naked', year: '2023', km: 5000, price: 22000, transmission: 'Manual', fuel: 'Gasolina', color: 'Vermelho', doors: 0, seats: 2, images: ['https://i.imgur.com/8Bx4EDi.png', 'https://i.imgur.com/8Bx4EDi.png', 'https://i.imgur.com/8Bx4EDi.png'], condition: 'Seminovo' },
+            { type: 'moto', name: 'Yamaha Lander 250', category: 'Trail', year: '2024', km: 1500, price: 24500, transmission: 'Manual', fuel: 'Gasolina', color: 'Azul', doors: 0, seats: 2, images: ['https://i.imgur.com/HnKjSPc.png', 'https://i.imgur.com/HnKjSPc.png', 'https://i.imgur.com/HnKjSPc.png'], condition: 'Seminovo' },
+            { type: 'moto', name: 'BMW G310 GS', category: 'Trail', year: '2022', km: 8000, price: 32000, transmission: 'Manual', fuel: 'Gasolina', color: 'Branco', doors: 0, seats: 2, images: ['https://i.imgur.com/d24t7vD.png', 'https://i.imgur.com/d24t7vD.png', 'https://i.imgur.com/d24t7vD.png'], condition: 'Seminovo' }
         ];
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -348,9 +480,13 @@
             const pages = document.querySelectorAll('.page-content, #vehicle-details');
             const toggleFiltersBtn = document.getElementById('toggle-filters-btn');
             const filtersSidebar = document.getElementById('filters-sidebar');
-            const stickyHeader = document.getElementById('sticky-header');
-            
+            const vehicleTypeToggle = document.getElementById('vehicle-type-toggle');
+            const contentTitle = document.getElementById('content-title');
+            const carCategories = document.getElementById('car-categories');
+            const motoCategories = document.getElementById('moto-categories');
+
             let favorites = [];
+            let currentVehicleType = 'car';
 
             function formatCurrency(value) { return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
 
@@ -359,7 +495,7 @@
                 return `
                     <article class="vehicle-card" data-name="${vehicle.name}" style="animation-delay: ${index * 0.05}s">
                         <div class="card-header"> <h2>${vehicle.name}</h2> <p class="year-km">${vehicle.year} &bull; ${vehicle.km.toLocaleString('pt-BR')} km</p> <i class="favorite-icon ${isFavorited ? 'fas fa-star active' : 'far fa-star'}" data-name="${vehicle.name}"></i> </div>
-                        <img src="${vehicle.image}" alt="Carro ${vehicle.name}" onerror="this.onerror=null;this.src='https://placehold.co/400x200/2A2A2A/E0E0E0?text=${vehicle.name.replace(' ', '+')}';">
+                        <img src="${vehicle.images[0]}" alt="Veículo ${vehicle.name}" onerror="this.onerror=null;this.src='https://placehold.co/400x200/2A2A2A/E0E0E0?text=${vehicle.name.replace(' ', '+')}';">
                         <div class="card-footer"> <div class="price-info"> <p class="price-label">Preço à vista</p> <p class="price-value">${formatCurrency(vehicle.price)}</p> </div> </div>
                     </article>`;
             }
@@ -372,6 +508,8 @@
             }
 
             function filterAndRender() {
+                const dataToFilter = vehicleData.filter(v => v.type === currentVehicleType);
+
                 const formData = new FormData(filterForm);
                 const condition = formData.get('condition');
                 const priceRange = formData.get('price').split('-');
@@ -379,7 +517,7 @@
                 const year = formData.get('year');
                 const transmission = formData.get('transmission');
                 
-                let filteredVehicles = vehicleData.filter(v => {
+                let filteredVehicles = dataToFilter.filter(v => {
                     const [minPrice, maxPrice] = priceRange;
                     const priceMatch = priceRange[0] === 'all' || (v.price >= Number(minPrice) && v.price <= Number(maxPrice));
                     const categoryMatch = categories.length === 0 || categories.includes(v.category);
@@ -412,8 +550,14 @@
                 if (targetPage) {
                     targetPage.classList.remove('hidden');
                 }
+                
+                if (pageId === 'home') {
+                    document.body.classList.remove('sub-page');
+                    filterAndRender();
+                } else {
+                    document.body.classList.add('sub-page');
+                }
                 if(pageId === 'favorites') renderFavorites();
-                if(pageId === 'home') filterAndRender();
             }
             
             menuLinks.forEach(link => {
@@ -443,18 +587,28 @@
 
                         const detailsPage = document.getElementById('vehicle-details');
                         pages.forEach(p => p.classList.add('hidden'));
+                        document.body.classList.add('sub-page');
                         detailsPage.classList.remove('hidden');
+                        
+                        let thumbnailsHTML = vehicle.images.map((imgSrc, index) => `<img src="${imgSrc}" class="${index === 0 ? 'active' : ''}" alt="Miniatura ${index + 1}">`).join('');
 
                         detailsPage.innerHTML = `
                             <div class="details-header"> <h1>${vehicle.name}</h1> <button class="back-button"><i class="fa-solid fa-arrow-left"></i> Voltar</button> </div>
                             <div class="details-content">
-                                <div class="gallery"> <img src="${vehicle.image}" alt="Imagem de ${vehicle.name}" class="main-image"> </div>
+                                <div class="gallery">
+                                    <div class="main-image-container"> <img src="${vehicle.images[0]}" alt="Imagem principal de ${vehicle.name}" id="main-vehicle-image" class="main-image"> </div>
+                                    <div class="thumbnails"> ${thumbnailsHTML} </div>
+                                </div>
                                 <div class="details-info">
                                     <p class="price-value">${formatCurrency(vehicle.price)}</p>
                                     <ul class="specs-list">
-                                        <li><span>Ano/Modelo</span> <strong>${vehicle.year}</strong></li>
-                                        <li><span>Quilometragem</span> <strong>${vehicle.km.toLocaleString('pt-BR')} km</strong></li>
-                                        <li><span>Condição</span> <strong>${vehicle.condition}</strong></li>
+                                        <li><i class="fas fa-car"></i> <span>Condição:</span> <strong>${vehicle.condition}</strong></li>
+                                        <li><i class="fas fa-calendar-alt"></i> <span>Ano:</span> <strong>${vehicle.year}</strong></li>
+                                        <li><i class="fas fa-tachometer-alt"></i> <span>KM:</span> <strong>${vehicle.km.toLocaleString('pt-BR')}</strong></li>
+                                        <li><i class="fas fa-gas-pump"></i> <span>Combustível:</span> <strong>${vehicle.fuel}</strong></li>
+                                        <li><i class="fas fa-palette"></i> <span>Cor:</span> <strong>${vehicle.color}</strong></li>
+                                        ${vehicle.type === 'car' ? `<li><i class="fas fa-door-open"></i> <span>Portas:</span> <strong>${vehicle.doors}</strong></li>` : ''}
+                                        <li><i class="fas fa-chair"></i> <span>Assentos:</span> <strong>${vehicle.seats}</strong></li>
                                     </ul>
                                     <div class="financing-simulator">
                                         <h3>Simule seu Financiamento</h3>
@@ -490,8 +644,19 @@
                         document.getElementById('installments-slider').addEventListener('input', calculateFinancing);
                         document.querySelector('.back-button').addEventListener('click', () => {
                             detailsPage.classList.add('hidden');
-                            showPage(document.querySelector('.menu-links a.active').getAttribute('href').substring(1) || 'home');
+                            showPage('home');
                         });
+
+                        const mainImage = document.getElementById('main-vehicle-image');
+                        const thumbnails = detailsPage.querySelectorAll('.thumbnails img');
+                        thumbnails.forEach(thumb => {
+                            thumb.addEventListener('click', function() {
+                                mainImage.src = this.src;
+                                thumbnails.forEach(t => t.classList.remove('active'));
+                                this.classList.add('active');
+                            });
+                        });
+
                         calculateFinancing();
                     });
                 });
@@ -499,13 +664,43 @@
             
             function updateStoreStatus() {
                 const statusEl = document.getElementById('store-status');
+                if (!statusEl) return;
                 const now = new Date();
                 const day = now.getDay(); const hour = now.getHours();
                 const isWeekday = day >= 1 && day <= 5; const isSaturday = day === 6;
                 let isOpen = (isWeekday && hour >= 8 && hour < 18) || (isSaturday && hour >= 8 && hour < 14);
                 statusEl.textContent = isOpen ? 'Aberto' : 'Fechado';
-                statusEl.className = 'store-status ' + (isOpen ? 'open' : 'closed');
+                statusEl.style.color = isOpen ? 'var(--status-open)' : 'var(--status-closed)';
             }
+            
+            // --- LÓGICA DE ALTERNÂNCIA DE FILTROS (MODIFICADO) ---
+            vehicleTypeToggle.addEventListener('click', (e) => {
+                const btn = e.target.closest('.toggle-btn');
+                if (!btn) return;
+
+                // Limpa os checkboxes de categoria antes de trocar
+                document.querySelectorAll('#car-categories input[type="checkbox"], #moto-categories input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+
+                currentVehicleType = btn.dataset.type;
+                
+                vehicleTypeToggle.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                if (currentVehicleType === 'moto') {
+                    vehicleTypeToggle.classList.add('moto-active');
+                    contentTitle.innerHTML = 'Motos à Venda <span id="vehicle-count" class="vehicle-count"></span>';
+                    carCategories.classList.add('hidden');
+                    motoCategories.classList.remove('hidden');
+                } else {
+                    vehicleTypeToggle.classList.remove('moto-active');
+                    contentTitle.innerHTML = 'Veículos à Venda <span id="vehicle-count" class="vehicle-count"></span>';
+                    carCategories.classList.remove('hidden');
+                    motoCategories.classList.add('hidden');
+                }
+                filterAndRender(); // Renderiza novamente com o novo contexto e filtros limpos
+            });
 
             menuTrigger.addEventListener('click', () => menuOverlay.classList.add('active'));
             closeMenuBtn.addEventListener('click', () => menuOverlay.classList.remove('active'));
@@ -514,25 +709,47 @@
             filterForm.addEventListener('change', filterAndRender);
             sortSelect.addEventListener('change', filterAndRender);
             clearFiltersLink.addEventListener('click', (e) => { e.preventDefault(); filterForm.reset(); filterAndRender(); });
-            toggleFiltersBtn.addEventListener('click', () => {
-                filtersSidebar.classList.toggle('visible');
-                const isVisible = filtersSidebar.classList.contains('visible');
-                toggleFiltersBtn.querySelector('span').textContent = isVisible ? 'Ocultar Filtros' : 'Mostrar Filtros';
-                toggleFiltersBtn.querySelector('i').className = isVisible ? 'fa-solid fa-times' : 'fa-solid fa-filter';
-            });
+            
+            if(toggleFiltersBtn) {
+                toggleFiltersBtn.addEventListener('click', () => {
+                    filtersSidebar.classList.toggle('visible');
+                    const isVisible = filtersSidebar.classList.contains('visible');
+                    toggleFiltersBtn.querySelector('span').textContent = isVisible ? 'Ocultar Filtros' : 'Mostrar Filtros';
+                    toggleFiltersBtn.querySelector('i').className = isVisible ? 'fa-solid fa-times' : 'fa-solid fa-filter';
+                });
+            }
             
             window.addEventListener('scroll', () => {
                 if (window.scrollY > 50) {
-                    stickyHeader.classList.add('scrolled');
+                    document.body.classList.add('scrolled');
                 } else {
-                    stickyHeader.classList.remove('scrolled');
+                    document.body.classList.remove('scrolled');
                 }
             });
             
-            filterAndRender();
-            updateStoreStatus();
+            function initializePage() {
+                currentVehicleType = 'car';
+                
+                const carButton = vehicleTypeToggle.querySelector('.toggle-btn[data-type="car"]');
+                const motoButton = vehicleTypeToggle.querySelector('.toggle-btn[data-type="moto"]');
+                if(carButton) carButton.classList.add('active');
+                if(motoButton) motoButton.classList.remove('active');
+                
+                vehicleTypeToggle.classList.remove('moto-active');
+                
+                contentTitle.innerHTML = 'Veículos à Venda <span id="vehicle-count" class="vehicle-count"></span>';
+                
+                // Garante que os filtros corretos sejam exibidos no carregamento
+                carCategories.classList.remove('hidden');
+                motoCategories.classList.add('hidden');
+
+                filterAndRender();
+                updateStoreStatus();
+            }
+
+            initializePage();
             setInterval(updateStoreStatus, 60000);
         });
         </script>
 </body>
-</ht
+</html>
